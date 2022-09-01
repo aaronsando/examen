@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Laberinto</title>
+
+	<style type="text/css">
+		canvas{
+			background-color: rgb(40, 194, 168);
+            border: 1px solid black;
+		}
+	</style>
+    
+</head>
+<body>
+    
+	<canvas id="canvas" width="1350" height="600"></canvas>
+
+    <audio controls src="Minions-6.mp3" autoplay loop></audio>
+
+
+	<script type="text/javascript">
+
+        var canvas = null
+        var ctx = null;
+
+        var img1 = new Image();
+        img1.src = "gru.png" ;
+
+        var img2 = new Image();
+        img2.src = "pepe.png" ;
+
+        var img3 = new Image();
+        img3.src = "banana.png" ; 
+
+        var player1 = null;
+        var direccion = '';
+        var speed = 2;
+        var pause = false;
+
+        var borde = [4];
+        var pared = [];
+
+        function run (){
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+
+            player1 = new Cuadro(405, 52, 15, 15, randomColor());
+           
+
+            //Izquierd0
+            borde [0] = new Cuadro(390, 80, 10, 480, "black");
+            //Arriba
+            borde [1] = new Cuadro(390, 40, 620, 10, "black");
+            //Abajo
+            borde [2] = new Cuadro(400, 550, 610, 10, "black");
+            //Derecho
+            borde [3] = new Cuadro(1000, 80, 10, 440, "black");
+
+
+            pared [0] = new Cuadro(430, 50, 5, 30, "gray");
+            pared [1] = new Cuadro(430, 80, 30, 5, "white");
+            pared [2] = new Cuadro(400, 110, 215, 5, "white");
+            pared [3] = new Cuadro(490, 80, 5, 30, "gray");
+            pared [4] = new Cuadro(520, 50, 5, 30, "gray");
+
+            pared [5] = new Cuadro(550, 80, 5, 30, "gray");
+            pared [6] = new Cuadro(580, 50, 5, 30, "gray");
+            pared [7] = new Cuadro(610, 80, 5, 30, "gray");
+            pared [8] = new Cuadro(640, 50, 5, 90, "gray");
+            pared [9] = new Cuadro(610, 140, 35, 5, "white");
+
+            pared [10] = new Cuadro(580, 115, 5, 30, "gray");
+            pared [11] = new Cuadro(610, 145, 5, 30, "gray");
+            pared [12] = new Cuadro(520, 170, 95, 5, "white");
+            pared [13] = new Cuadro(550, 140, 35, 5, "white");
+            pared [14] = new Cuadro(520, 140, 5, 30, "gray");
+
+            pared [15] = new Cuadro(430, 140, 95, 5, "white");
+            pared [16] = new Cuadro(400, 170, 65, 5, "white");
+
+            pared [17] = new Cuadro(460, 175, 5, 30, "gray");
+            pared [18] = new Cuadro(490, 145, 5, 30, "gray");
+            pared [19] = new Cuadro(460, 200, 65, 5, "white");
+
+            pared [20] = new Cuadro(520, 205, 5, 90, "gray");
+            pared [21] = new Cuadro(550, 175, 5, 90, "gray");
+            pared [22] = new Cuadro(550, 200, 130, 5, "white");
+            pared [23] = new Cuadro(520, 290, 65, 5, "white");
+            pared [24] = new Cuadro(580, 235, 5, 55, "gray");
+            pared [25] = new Cuadro(580, 230, 195, 5, "white");
+
+            pared [26] = new Cuadro(640, 110, 35, 5, "white");
+            pared [27] = new Cuadro(675, 170, 5, 30, "gray");
+            pared [28] = new Cuadro(645, 170, 35, 5, "white");
+            pared [29] = new Cuadro(705, 80, 5, 150, "gray");
+            pared [30] = new Cuadro(680, 140, 30, 5, "white");
+            pared [31] = new Cuadro(680, 80, 95, 5, "white");
+            pared [32] = new Cuadro(770, 85, 5, 90, "gray");
+            pared [33] = new Cuadro(740, 140, 30, 5, "white");
+            pared [34] = new Cuadro(740, 110, 5, 30, "gray");
+            pared [35] = new Cuadro(805, 50, 5, 90, "gray");
+            pared [36] = new Cuadro(770, 170, 75, 5, "white");
+            pared [37] = new Cuadro(840, 140, 5, 30, "gray");
+            pared [38] = new Cuadro(805, 110, 75, 5, "white");
+            pared [39] = new Cuadro(875, 110, 5, 90, "gray");
+            pared [40] = new Cuadro(740, 200, 140, 5, "white");
+            pared [41] = new Cuadro(740, 170, 5, 30, "gray");
+            pared [42] = new Cuadro(770, 235, 5, 60, "gray");
+            pared [43] = new Cuadro(805, 235, 5, 30, "gray");
+            pared [44] = new Cuadro(770, 295, 75, 5, "white");
+            pared [45] = new Cuadro(840, 260, 5, 35, "gray");
+            pared [46] = new Cuadro(805, 230, 110, 5, "white");
+            pared [47] = new Cuadro(875, 235, 5, 95, "gray");
+            pared [48] = new Cuadro(805, 325, 75, 5, "white");
+            pared [49] = new Cuadro(805, 330, 5, 30, "gray");
+            pared [50] = new Cuadro(910, 170, 5, 60, "gray");
+            pared [51] = new Cuadro(910, 170, 65, 5, "white");
+            pared [52] = new Cuadro(875, 140, 40, 5, "white");
+            pared [53] = new Cuadro(840, 80, 75, 5, "white");
+            pared [54] = new Cuadro(910, 85, 5, 55, "gray");
+            pared [55] = new Cuadro(940, 85, 5, 85, "gray");
+            pared [56] = new Cuadro(940, 80, 60, 5, "white");
+            pared [57] = new Cuadro(740, 325, 35, 5, "white");
+            pared [58] = new Cuadro(770, 330, 5, 105, "gray");
+            pared [59] = new Cuadro(970, 115, 5, 55, "gray");
+
+            pared [60] = new Cuadro(840, 360, 5, 75, "gray");
+            pared [61] = new Cuadro(805, 390, 35, 5, "white");
+            pared [62] = new Cuadro(775, 430, 35, 5, "white");
+            pared [63] = new Cuadro(740, 265, 5, 60, "gray");
+            pared [64] = new Cuadro(615, 260, 95, 5, "white");
+            pared [65] = new Cuadro(705, 265, 5, 95, "gray");
+            pared [66] = new Cuadro(705, 360, 40, 5, "white");
+            pared [67] = new Cuadro(840, 360, 120, 5, "white");
+            pared [68] = new Cuadro(915, 295, 5, 65, "gray");
+            pared [69] = new Cuadro(915, 260, 85, 5, "white");
+            pared [70] = new Cuadro(955, 230, 5, 30, "gray");
+            pared [71] = new Cuadro(960, 200, 40, 5, "white");
+            pared [72] = new Cuadro(955, 295, 45, 5, "white");
+            pared [73] = new Cuadro(955, 335, 5, 65, "gray");
+            pared [74] = new Cuadro(960, 395, 40, 5, "white");
+            pared [75] = new Cuadro(805, 430, 5, 45, "gray");
+            pared [76] = new Cuadro(805, 470, 80, 5, "white");
+            pared [77] = new Cuadro(880, 395, 5, 75, "gray");
+            pared [78] = new Cuadro(920, 395, 35, 5, "white");
+            pared [79] = new Cuadro(885, 435, 75, 5, "white");
+            pared [80] = new Cuadro(955, 435, 5, 115, "gray");
+            pared [81] = new Cuadro(740, 360, 5, 115, "gray");
+            pared [82] = new Cuadro(740, 470, 35, 5, "white");
+            pared [83] = new Cuadro(770, 475, 5, 45, "gray");
+            pared [84] = new Cuadro(775, 515, 180, 5, "white");
+            pared [85] = new Cuadro(915, 475, 5, 40, "gray");
+            pared [86] = new Cuadro(585, 290, 120, 5, "white");
+
+
+
+            paint();
+        }
+
+        function paint(){
+
+            ctx.drawImage(img1, 1000, 20, 150, 150);
+            ctx.drawImage(img2, 180, 20,200,150);
+            ctx.drawImage(img3, 1020,480,80,80);
+
+            window.requestAnimationFrame(paint)
+
+            ctx.fillStyle = 'white';
+            ctx.fillRect(400, 50, 600, 500);
+
+            player1.pintar(ctx);
+
+            for (var i = 0;i<borde.length; i++){
+                borde[i].pintar(ctx);
+            }
+
+            for(var i = 0; i<pared.length; i++){
+                pared[i].pintar(ctx);
+            }
+
+            update();
+    
+        }
+
+        function update(){
+
+            if (direccion == 'arriba') {
+                player1.y -= speed;
+            }
+
+            if (direccion == 'abajo') {
+                player1.y += speed;
+            }
+
+            if (direccion == 'izquierda') {
+                player1.x -= speed;
+                if(player1.x<400){
+                    player1.x = 401;
+                }
+            }
+
+            if (direccion == 'derecha') {
+                player1.x += speed;
+                if(player1.x>999){
+                    window.alert("GANASTE!! ");
+                    player1.x = 999;
+                }
+            }
+
+            for (var i = 0; i<borde.length; i++){
+                if (player1.se_tocan(borde[i])){
+                    if (direccion == "arriba"){
+                        player1.y += speed;
+                    }
+                    if (direccion == "abajo"){
+                        player1.y -= speed;
+                    }
+                    if (direccion == "izquierda"){
+                        player1.x += speed;
+                    }
+                    if (direccion == "derecha"){
+                        player1.x -= speed;
+                    }
+                }
+            }
+
+            for (var i = 0; i<pared.length; i++){
+                if (player1.se_tocan(pared[i])){
+                    if (direccion == "arriba"){
+                        player1.y += speed;
+                    }
+                    if (direccion == "abajo"){
+                        player1.y -= speed;
+                    }
+                    if (direccion == "izquierda"){
+                        player1.x += speed;
+                    }
+                    if (direccion == "derecha"){
+                        player1.x -= speed;
+                    }
+                }
+            }
+
+           
+
+        }
+
+        
+
+        function random(number){
+            return Math.floor(Math.random()*number);
+        }
+        function randomColor(){
+            return 'rgba('+random(255)+','+random(255)+','+random(255)+',0.3)';
+        }
+
+
+        window.requestAnimationFrame = (function () {
+            return window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            function (callback) {
+                window.setTimeout(callback, 17);
+            };
+        }());
+
+        function Cuadro(x, y, w, h, c){
+
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            this.c = c;
+
+            this.pintar = function (ctx) {
+            ctx.fillStyle = this.c;
+            ctx.fillRect(this.x, this.y, this.w, this.h);
+            ctx.strokeRect(this.x, this.y, this.w, this.h);
+            }
+
+            this.se_tocan = function (target) { 
+
+            if(this.x < target.x + target.w &&
+            this.x + this.w > target.x && 
+            this.y < target.y + target.h && 
+            this.y + this.h > target.y){
+            return true;	
+            console.log("hola");
+
+             }
+            };
+        }
+
+     
+
+
+        document.addEventListener('keydown', function(e){
+            console.log(e);
+
+            if (e.keyCode == 87 || e.keyCode == 38) {
+                // super_y -= 5;
+                direccion = 'arriba';
+            }
+
+            if (e.keyCode == 83 || e.keyCode == 40) {
+                // super_y += 5;
+                direccion = 'abajo';
+            }
+
+            if (e.keyCode == 65 || e.keyCode == 37) {
+                // super_x -= 5;
+                direccion = 'izquierda';
+            }
+
+            if (e.keyCode == 68 || e.keyCode == 39) {
+                // super_x += 5;
+                direccion = 'derecha';
+            }
+            
+            if (e.keyCode == 32){
+                pause = (pause) ? false:true;
+            }
+        })
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        window.addEventListener('load', run, false);
+
+
+        
+    </script>
+
+</body>
+</html>
